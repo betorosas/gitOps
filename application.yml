@@ -1,26 +1,24 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: restaurant-listing-default
+  name: restaurantlisting
   namespace: argocd
-  annotations:
-    argocd-image-updater.argoproj.io/image-list: myalias=docker.io/codedecode25        
-    argocd-image-updater.argoproj.io/write-back-method: git:secret:argocd/git-creds           
-    argocd-image-updater.argoproj.io/git-branch: master                                          
-    argocd-image-updater.argoproj.io/myalias.force-update: "true"
 spec:
-  destination:
-    server: 'https://kubernetes.default.svc'
-    namespace: default
-  source:
-    repoURL: 'git@github.com:udemy-dev-withK8s-AWS-codedecode/deployment-folder.git'
-    path: ./aws
-    targetRevision: HEAD
-    directory:
-      recurse: true
   project: default
+
+  source:
+    repoURL: git@github.com:betorosas/gitOps.git
+    targetRevision: main
+    path: k8s   # <-- CAMBIA esto si tus manifests están en una carpeta (ej: k8s/restaurant)
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: restaurant  # <-- CAMBIA esto si usas otro namespace (ej: restaurant)
+
   syncPolicy:
     automated:
+      prune: true
       selfHeal: true
     syncOptions:
-      - Validate=true
+      - CreateNamespace=true   
+      - Validate=true      
