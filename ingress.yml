@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: aws-ingress
+  #namespace: argocd
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /restaurant
+            pathType: Prefix
+            backend:
+              service:
+                name: restaurant-service
+                port:
+                  number: 9091
+
+         
